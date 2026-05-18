@@ -1,0 +1,24 @@
+show("--- 11. Testing Character Frequency ---\n");
+
+show("Enter a string: ");
+assume str := ask();
+show("Input string: " + str + "\n");
+
+assume freqs := array(256);
+each (assume i := 0; i < 256; i := i + 1) {
+    freqs[i] := 0;
+}
+
+each (assume i := 0; i < length(str); i := i + 1) {
+    assume c := str[i];
+    assume index := to_int(c);
+    freqs[index] := freqs[index] + 1;
+}
+
+show("Character Frequencies:\n");
+each (assume i := 0; i < 256; i := i + 1) {
+    when (freqs[i] > 0) {
+        show(to_str(to_char(i)) + ": " + to_str(freqs[i]) + "\n");
+    }
+}
+
