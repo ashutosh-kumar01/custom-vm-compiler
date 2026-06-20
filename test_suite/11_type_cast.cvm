@@ -1,0 +1,27 @@
+show("--- 11. Testing Type Casting and Char Arithmetic ---\n");
+
+show("Char 'a' + 1 = ");
+assume next_char := 'a' + 1;
+show(to_str(next_char) + "\n");
+
+show("Char 'z' - 'a' = ");
+assume diff := 'z' - 'a';
+show(to_str(diff) + "\n");
+
+show("to_bool(0) = ");
+show(to_str(to_bool(0)) + "\n");
+
+show("to_bool(1) = ");
+show(to_str(to_bool(1)) + "\n");
+
+show("to_bool(\"\") = ");
+show(to_str(to_bool("")) + "\n");
+
+show("to_bool(\"hello\") = ");
+show(to_str(to_bool("hello")) + "\n");
+
+show("to_str(42) = ");
+show(to_str(42) + "\n");
+
+show("to_char(98) = ");
+show(to_str(to_char(98)) + "\n");

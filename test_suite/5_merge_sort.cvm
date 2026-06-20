@@ -1,0 +1,88 @@
+// tests/5_merge_sort.cvm
+show("--- 5. Testing Merge Sort & Arrays ---\n);
+
+fn merge(left, right) {
+    assume lenL := length(left);
+    assume lenR := length(right);
+    assume result := array(lenL + lenR);
+    assume i := 0;
+    assume j := 0;
+    assume k := 0;
+    
+    loop (i < lenL and j < lenR) {
+        assume valL := left[i];
+        assume valR := right[j];
+        when (valL < valR) {
+            result[k] := valL;
+            i := i + 1;
+        } otherwise {
+            result[k] := valR;
+            j := j + 1;
+        }
+        k := k + 1;
+    }
+    
+    loop (i < lenL) {
+        result[k] := left[i];
+        i := i + 1;
+        k := k + 1;
+    }
+    
+    loop (j < lenR) {
+        result[k] := right[j];
+        j := j + 1;
+        k := k + 1;
+    }
+    
+    give result;
+}
+
+fn merge_sort(arr) {
+    assume len := length(arr);
+    when (len < 2) {
+        give arr;
+    }
+    
+    assume mid := len / 2;
+    assume left := array(mid);
+    assume right := array(len - mid);
+    
+    assume i := 0;
+    loop (i < mid) {
+        left[i] := arr[i];
+        i := i + 1;
+    }
+    
+    assume j := 0;
+    loop (j < len - mid) {
+        right[j] := arr[mid + j];
+        j := j + 1;
+    }
+    
+    assume sortedLeft := merge_sort(left);
+    assume sortedRight := merge_sort(right);
+    give merge(sortedLeft, sortedRight);
+}
+
+show("Enter the size of the array to sort: ");
+assume size_str := ask();
+assume size := to_int(size_str);
+
+when (size > 0) {
+    assume arr := array(size);
+    
+    each (assume i := 0; i < size; i := i + 1) {
+        show("Enter element: ");
+        arr[i] := to_int(ask());
+    }
+
+    show("Original Array:");
+    show(arr);
+
+    assume sorted_arr := merge_sort(arr);
+    show("\n");
+    show("Sorted Array: ");
+    show(sorted_arr);
+} otherwise {
+    show("Array size must be greater than 0.");
+}

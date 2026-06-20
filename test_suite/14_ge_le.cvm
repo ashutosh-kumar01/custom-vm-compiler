@@ -1,0 +1,19 @@
+show("--- 14. Testing >= and <= ---\n");
+
+assume a := 5 >= 3;
+show("5 >= 3: " + to_str(a) + " (Expected true)\n");
+
+assume b := 5 >= 5;
+show("5 >= 5: " + to_str(b) + " (Expected true)\n");
+
+assume c := 3 >= 5;
+show("3 >= 5: " + to_str(c) + " (Expected false)\n");
+
+assume d := 2 <= 4;
+show("2 <= 4: " + to_str(d) + " (Expected true)\n");
+
+assume e := 4 <= 4;
+show("4 <= 4: " + to_str(e) + " (Expected true)\n");
+
+assume f := 6 <= 4;
+show("6 <= 4: " + to_str(f) + " (Expected false)\n");

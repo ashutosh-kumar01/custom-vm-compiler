@@ -1,0 +1,29 @@
+// --- COMPILER SCOPE & BYTECODE TEST ---
+// This file tests variable shadowing, global vs local state, 
+// and proper bytecode emission for function environments.
+
+show("--- 03. Compiler Scope Test ---\n");
+
+assume global_val := "I am Global";
+
+fn test_shadowing(global_val) {
+    // This should shadow the global variable
+    show("Inside func (shadowed arg): " + global_val + "\n");
+    
+    // Create an inner block variable
+    assume inner_val := "Inner State";
+    give inner_val;
+}
+
+assume ret := test_shadowing("I am Local");
+show("Returned: " + ret + "\n");
+show("Global after func: " + global_val + "\n");
+
+fn nested_calls(x) {
+    when (x == 0) {
+        give 0;
+    }
+    give x + nested_calls(x - 1);
+}
+
+show("Nested call sum(5) (Expected 15): " + to_str(nested_calls(5)) + "\n");

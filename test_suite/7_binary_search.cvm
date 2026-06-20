@@ -1,0 +1,33 @@
+show("--- 7. Testing Binary Search ---\n");
+
+fn binary_search(arr, target) {
+    assume low := 0;
+    assume high := length(arr) - 1;
+    
+    loop (low <= high) {
+        assume mid := (low + high) / 2;
+        assume midVal := arr[mid];
+        
+        when (midVal == target) {
+            give mid;
+        } elsewhen (midVal < target) {
+            low := mid + 1;
+        } otherwise {
+            high := mid - 1;
+        }
+    }
+    give 0 - 1; // Return -1 if not found
+}
+
+assume arr := array(5);
+arr[0] := 10;
+arr[1] := 20;
+arr[2] := 30;
+arr[3] := 40;
+arr[4] := 50;
+
+show("Index of 30 (expected 2):");
+show(binary_search(arr, 30));
+show("\n");
+show("Index of 15 (expected -1):");
+show(binary_search(arr, 15));

@@ -1,0 +1,19 @@
+// tests/3_string_reverse.cvm
+show("--- 3. Testing String Reverse ---\n");
+
+fn reverse_string(str) {
+    assume len := length(str);
+    assume result := "";
+    assume i := len - 1;
+    loop (i >= 0) {
+        result := result + str[i];
+        i := i - 1;
+    }
+    give result;
+}
+show("Enter a string to reverse : ");
+assume rev := ask();
+show("Reverse of ");
+show(rev);
+show(" is :");
+show(reverse_string(rev));

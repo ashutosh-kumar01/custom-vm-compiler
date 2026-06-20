@@ -1,0 +1,33 @@
+show("--- 13. Testing Operator Precedence ---\n");
+
+show("Test 1: Math (10 + 2 * 5 - 8 / 4)\n");
+assume math1 := 10 + 2 * 5 - 8 / 4; 
+// 10 + (2 * 5) - (8 / 4) = 10 + 10 - 2 = 18
+show("Result: " + to_str(math1) + " (Expected 18)\n\n");
+
+show("Test 2: Modulo Precedence (15 % 4 + 2 * 3)\n");
+assume math2 := 15 % 4 + 2 * 3;
+// (15 % 4) + (2 * 3) = 3 + 6 = 9
+show("Result: " + to_str(math2) + " (Expected 9)\n\n");
+
+show("Test 3: Logical AND/OR (true or false and false)\n");
+assume logic1 := true or false and false;
+// true or (false and false) = true or false = true
+show("Result: " + to_str(logic1) + " (Expected true)\n\n");
+
+show("Test 4: Relational & Equality (5 > 3 == 2 < 4)\n");
+assume logic2 := 5 > 3 == 2 < 4;
+// (5 > 3) == (2 < 4) -> true == true -> true
+show("Result: " + to_str(logic2) + " (Expected true)\n\n");
+
+show("Test 5: Parentheses overrides ((10 + 2) * (5 - 8) / 4)\n");
+assume math3 := (10 + 2) * (5 - 8) / 4;
+// 12 * -3 / 4 = -36 / 4 = -9
+show("Result: " + to_str(math3) + " (Expected -9)\n\n");
+
+show("Test 6: Complex Mixed (1 + 2 * 3 > 5 and 10 % 3 == 1)\n");
+assume mixed := 1 + 2 * 3 > 5 and 10 % 3 == 1;
+// (1 + (2 * 3) > 5) and ((10 % 3) == 1)
+// (7 > 5) and (1 == 1)
+// true and true = true
+show("Result: " + to_str(mixed) + " (Expected true)\n\n");

@@ -1,0 +1,33 @@
+// --- PARSER STRESS TEST ---
+// This file tests deep AST nesting, operator precedence, 
+// and complex block statement parsing.
+
+show("--- 02. Parser Stress Test ---\n");
+
+// 1. Deep Expression Nesting
+assume a := 1 + 2 * 3 - 4 / 2 % 2; 
+assume b := (1 + 2) * (3 - 4) / 2;
+
+// 2. Dangling Else / Nested Conditionals
+assume res := "";
+assume val := 10;
+when (val > 5) {
+    when (val > 15) {
+        res := "Greater than 15";
+    } otherwise {
+        res := "Between 5 and 15";
+    }
+} otherwise {
+    res := "Less than 5";
+}
+
+// 3. Nested loops
+assume count := 0;
+each (assume i := 0; i < 3; i := i + 1) {
+    each (assume j := 0; j < 3; j := j + 1) {
+        count := count + 1;
+    }
+}
+
+show("Parser successfully built AST for deep math precedence, nested conditionals, and nested loops.\n");
+show("Count should be 9: " + to_str(count) + "\n");

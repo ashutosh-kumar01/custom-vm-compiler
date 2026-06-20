@@ -1,0 +1,25 @@
+// tests/4_palindrome.cvm
+show("--- 4. Testing Palindrome Check ---\n");
+
+fn is_palindrome(str) {
+    assume len := length(str);
+    assume i := 0;
+    assume j := len - 1;
+    loop (i < j) {
+        assume charI := str[i];
+        assume charJ := str[j];
+        when (charI != charJ) {
+            give false;
+        }
+        i := i + 1;
+        j := j - 1;
+    }
+    give true;
+}
+
+show("Enter a string to check palindrome : ");
+assume s:= ask();
+show("Is ");
+show(s);
+show(" a palindrome  ? ");
+show(is_palindrome(s));

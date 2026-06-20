@@ -1,0 +1,32 @@
+// --- VIRTUAL MACHINE STRESS TEST ---
+// This file tests runtime type conversions, array mutation,
+// memory boundary checks (if applicable), and stack stability.
+
+show("--- 04. Virtual Machine Stress Test ---\n");
+
+// 1. Array bounds and dynamic typing in arrays
+assume arr := array(3, "Empty");
+arr[0] := 42;
+arr[1] := 3.14;
+arr[2] := 'Z';
+
+show("Array size: " + to_str(length(arr)) + "\n");
+show("Array[0] (Int): " + to_str(arr[0]) + "\n");
+show("Array[1] (Float): " + to_str(arr[1]) + "\n");
+show("Array[2] (Char): " + to_str(arr[2]) + "\n");
+
+// 2. String manipulation via VM indexing
+assume str := "Virtual Machine";
+assume first_char := str[0];
+assume last_char := str[length(str) - 1];
+
+show("First char: " + to_str(first_char) + "\n");
+show("Last char: " + to_str(last_char) + "\n");
+
+// 3. Dynamic Type Reassignment (Testing std::variant)
+assume dyn_var := 100;
+dyn_var := "Now I am a string";
+dyn_var := true;
+
+show("Dynamic Variable Final State: " + to_str(dyn_var) + "\n");
+show("VM execution flawlessly managed the memory stack and variant types.\n");

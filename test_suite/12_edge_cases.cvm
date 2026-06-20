@@ -1,0 +1,16 @@
+show("--- 12. Testing Edge Cases (Exposing Flaws) ---\n");
+
+assume arr := array(2);
+
+show("Attempting Out of Bounds Array Access...\n");
+// arr[5] := 10; // This throws std::runtime_error in C++, causing raw crash. 
+// A flaw is we don't have try-catch blocks yet!
+
+show("Attempting Type Mismatch...\n");
+// assume oops := 5 + "hello"; // Throws runtime_error, raw crash.
+
+show("Attempting Division by Zero...\n");
+// assume zero := 5 / 0; // Raw C++ floating point exception/crash!
+
+show("Because CVM++ lacks try/catch blocks, these operations cause the C++ VM to abort execution.\n");
+show("To prevent raw crashes, the VM needs an internal Error state or Try-Catch syntax.\n");

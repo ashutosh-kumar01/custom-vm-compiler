@@ -1,0 +1,15 @@
+// tests/2_bodmas.cvm
+show("--- 2. Testing BODMAS ---\n");
+
+assume math1 := 10 + 2 * 5 - 8 / 4; 
+assume math2 := (10 + 2) * (5 - 8) / 4; 
+assume math3 := 15 % 4 + 2; 
+
+show("10 + 2 * 5 - 8 / 4 (expected 18): ");
+show(math1);
+show("\n");
+show("(10 + 2) * (5 - 8) / 4 (expected -9):");
+show(math2);
+show("\n");
+show("15 % 4 + 2 (expected 5):");
+show(math3);
