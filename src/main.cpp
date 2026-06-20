@@ -29,9 +29,13 @@ void dumpBytecode(const Chunk& chunk) {
             case OpCode::OP_SUB: std::cout << "OP_SUB" << std::endl; offset++; break;
             case OpCode::OP_MUL: std::cout << "OP_MUL" << std::endl; offset++; break;
             case OpCode::OP_DIV: std::cout << "OP_DIV" << std::endl; offset++; break;
+            case OpCode::OP_MOD: std::cout << "OP_MOD" << std::endl; offset++; break;
             case OpCode::OP_EQUAL: std::cout << "OP_EQUAL" << std::endl; offset++; break;
             case OpCode::OP_GREATER: std::cout << "OP_GREATER" << std::endl; offset++; break;
             case OpCode::OP_LESS: std::cout << "OP_LESS" << std::endl; offset++; break;
+            case OpCode::OP_NOT: std::cout << "OP_NOT" << std::endl; offset++; break;
+            case OpCode::OP_AND: std::cout << "OP_AND" << std::endl; offset++; break;
+            case OpCode::OP_OR: std::cout << "OP_OR" << std::endl; offset++; break;
             case OpCode::OP_PRINT: std::cout << "OP_PRINT" << std::endl; offset++; break;
             case OpCode::OP_ASK: std::cout << "OP_ASK" << std::endl; offset++; break;
             case OpCode::OP_SET_GLOBAL: {
@@ -70,6 +74,13 @@ void dumpBytecode(const Chunk& chunk) {
                 offset += 3;
                 break;
             }
+            case OpCode::OP_CALL: {
+                uint8_t argCount = chunk.code[offset + 1];
+                std::cout << "OP_CALL " << (int)argCount << std::endl;
+                offset += 2;
+                break;
+            }
+            case OpCode::OP_RETURN: std::cout << "OP_RETURN" << std::endl; offset++; break;
             case OpCode::OP_ARRAY: std::cout << "OP_ARRAY" << std::endl; offset++; break;
             case OpCode::OP_LENGTH: std::cout << "OP_LENGTH" << std::endl; offset++; break;
             case OpCode::OP_INDEX_GET: std::cout << "OP_INDEX_GET" << std::endl; offset++; break;
@@ -91,52 +102,77 @@ int main(int argc, char* argv[]) {
     SetConsoleOutputCP(CP_UTF8);
 #endif
 
-    if (argc < 2) {
-        std::cerr << "Usage: cvm [file.cvm] [--dump-ast] [--dump-bytecode]" << std::endl;
+    if (argc < 3) {
+        std::cerr << "Usage:\n"
+                  << "  cvm compile <file.cvm> [output.cvmc] [--dump-ast] [--dump-bytecode]\n"
+                  << "  cvm run <file.cvmc>\n";
         return 1;
     }
 
-    bool dumpAst = false;
-    bool dumpBc = false;
-    for (int i = 2; i < argc; ++i) {
-        if (std::string(argv[i]) == "--dump-ast") dumpAst = true;
-        if (std::string(argv[i]) == "--dump-bytecode") dumpBc = true;
-    }
+    std::string command = argv[1];
 
-    std::ifstream file(argv[1]);
-    if (!file.is_open()) {
-        std::cerr << "Could not open file: " << argv[1] << std::endl;
-        return 1;
-    }
+    if (command == "compile") {
+        std::string inputFile = argv[2];
+        std::string outputFile = inputFile + "c"; // Default to .cvmc
+        bool dumpAst = false;
+        bool dumpBc = false;
 
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    std::string source = buffer.str();
-
-    Lexer lexer(source);
-    std::vector<Token> tokens = lexer.scanTokens();
-
-    Parser parser(tokens);
-    std::vector<std::shared_ptr<Stmt>> statements = parser.parse();
-
-    if (dumpAst) {
-        std::cout << "Program\n";
-        for (size_t i = 0; i < statements.size(); ++i) {
-            statements[i]->print("", i == statements.size() - 1);
+        for (int i = 3; i < argc; ++i) {
+            std::string arg = argv[i];
+            if (arg == "--dump-ast") dumpAst = true;
+            else if (arg == "--dump-bytecode") dumpBc = true;
+            else outputFile = arg;
         }
-    }
 
-    Chunk chunk;
-    Compiler compiler(&chunk);
-    compiler.compile(statements);
+        std::ifstream file(inputFile);
+        if (!file.is_open()) {
+            std::cerr << "Could not open file: " << inputFile << std::endl;
+            return 1;
+        }
 
-    if (dumpBc) {
-        dumpBytecode(chunk);
-    }
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        std::string source = buffer.str();
 
-    if (!dumpAst && !dumpBc) {
+        Lexer lexer(source);
+        std::vector<Token> tokens = lexer.scanTokens();
+
+        Parser parser(tokens);
+        std::vector<std::shared_ptr<Stmt>> statements = parser.parse();
+
+        if (dumpAst) {
+            std::cout << "Program\n";
+            for (size_t i = 0; i < statements.size(); ++i) {
+                statements[i]->print("", i == statements.size() - 1);
+            }
+        }
+
+        Chunk chunk;
+        Compiler compiler(&chunk);
+        compiler.compile(statements);
+
+        if (dumpBc) {
+            dumpBytecode(chunk);
+        }
+
+        chunk.saveToFile(outputFile);
+        std::cout << "Successfully compiled to " << outputFile << std::endl;
+
+    } else if (command == "run") {
+        std::string inputFile = argv[2];
+        Chunk chunk;
+        try {
+            chunk.loadFromFile(inputFile);
+        } catch (const std::exception& e) {
+            std::cerr << e.what() << std::endl;
+            return 1;
+        }
+
         VM vm(&chunk);
         vm.run();
+    } else {
+        std::cerr << "Unknown command: " << command << std::endl;
+        return 1;
     }
 
     return 0;

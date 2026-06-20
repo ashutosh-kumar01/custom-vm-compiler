@@ -25,6 +25,9 @@ public:
 
     void write(uint8_t byte, int line);
     int addConstant(Value value);
+    
+    void saveToFile(const std::string& path) const;
+    void loadFromFile(const std::string& path);
 };
 
 #endif
